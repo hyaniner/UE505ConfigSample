@@ -26,15 +26,13 @@ class UE505CONFIGSAMPLE_API UConfigBase : public UObject
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	int32 ValueInObject;
+	int32 ValueInObject { -1 };
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	FConfigTest MyStruct;
+	FConfigTest MyStruct { FConfigTest() };
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	FString ObjectName;	
-
-	UConfigBase();
+	FString ConfigObjectName { FString(TEXT("NotSet")) };	
 
 	virtual void SetUp(const FString& InObjectName, int32 InValueInObject, int32 InValueInStruct);
 
@@ -50,3 +48,13 @@ class UE505CONFIGSAMPLE_API UConfigEditorPerProjectUserSettings : public UConfig
 {
 	GENERATED_BODY()
 };
+
+
+UCLASS(BlueprintType, Blueprintable, Config = Editor)
+class UE505CONFIGSAMPLE_API UConfigEditor : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+
+

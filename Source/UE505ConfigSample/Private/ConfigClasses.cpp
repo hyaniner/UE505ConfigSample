@@ -3,16 +3,9 @@
 
 #include "UE505ConfigSample/Public/ConfigClasses.h"
 
-UConfigBase::UConfigBase()
-	: ValueInObject(-1)
-	, MyStruct(FConfigTest())
-	, ObjectName(FString(TEXT("NotSet")))
-{
-}
-
 void UConfigBase::SetUp(const FString& InObjectName, int32 InValueInObject, int32 InValueInStruct)
 {
-	ObjectName = InObjectName;
+	ConfigObjectName = InObjectName;
 	ValueInObject = InValueInObject;
 	MyStruct.ValueInStruct = InValueInStruct;
 }
@@ -20,12 +13,12 @@ void UConfigBase::SetUp(const FString& InObjectName, int32 InValueInObject, int3
 
 void UConfigBase::TrySaveConfig()
 {
-	UE_LOG(LogTemp, Warning, TEXT("TrySaveConfig : %s"), *ObjectName);
+	UE_LOG(LogTemp, Warning, TEXT("TrySaveConfig : %s"), *ConfigObjectName);
 	SaveConfig();
 }
 
 void UConfigBase::TryLoadConfig()
 {
-	UE_LOG(LogTemp, Warning, TEXT("TryLoadConfig : %s"), *ObjectName);
+	UE_LOG(LogTemp, Warning, TEXT("TryLoadConfig : %s"), *ConfigObjectName);
 	LoadConfig();
 }

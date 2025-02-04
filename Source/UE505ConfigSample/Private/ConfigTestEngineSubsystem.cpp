@@ -21,10 +21,16 @@ void UConfigTestEngineSubsystem::SetUp()
 {
 	ConfigObjects.Reset();
 
-	FString ObjectName = FString(TEXT("ConfigEditorPerProjectUserSettings"));
-	UConfigBase* Instance = NewObject<UConfigEditorPerProjectUserSettings>(this, FName(ObjectName));
-	Instance->SetUp(ObjectName, 2, 3);
-	ConfigObjects.Emplace(Instance);
+	ConfigObjects = {
+		NewObject<UConfigEditorPerProjectUserSettings>(this, FName(TEXT("UConfigEditorPerProjectUserSettings")))
+		, NewObject<UConfigEditor>(this, FName(TEXT("UConfigEditor")))
+	};
+
+	for (UConfigBase* Config : ConfigObjects)
+	{
+		Config->SetUp(Config->GetFName().ToString(), 4, 2);
+	}
+
 }
 
 void UConfigTestEngineSubsystem::TestConfig(int32 InValueInObject, int32 InValueInStruct)
