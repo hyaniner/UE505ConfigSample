@@ -7,6 +7,9 @@
 
 DEFINE_LOG_CATEGORY(CTestLog);
 
+
+
+
 void FConfigSampleModule::StartupModule()
 {
 	UE_LOG(LogTemp, Warning, TEXT("시작!"));
@@ -18,5 +21,5 @@ void FConfigSampleModule::ShutdownModule()
 	IModuleInterface::ShutdownModule();
 }
 
-IMPLEMENT_MODULE(FConfigSampleModule, UE505ConfigSample)
+IMPLEMENT_PRIMARY_GAME_MODULE(FConfigSampleModule, UE505ConfigSample, "UE505ConfigSample");
 
