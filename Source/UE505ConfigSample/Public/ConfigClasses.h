@@ -3,58 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ConfigBase.h"
 #include "UObject/Object.h"
 #include "ConfigClasses.generated.h"
 
-/**
- * This does not have the config specifier.
- * But it will have a config specifier in the object below as the property.
- * So it will be saved.
- */
-USTRUCT(BlueprintType)
-struct FConfigTest
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
-	int32 ValueInStruct = { -1 };
-};
 
 
-/**
- * This class has a based functionality to save/load config.
- */
-UCLASS(BlueprintType, Blueprintable, Config = EditorPerProjectUserSettings)
-class UE505CONFIGSAMPLE_API UConfigBase : public UObject
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	int32 ValueInObject { -1 };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	FConfigTest MyStruct { FConfigTest() };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	FString ConfigObjectName { FString(TEXT("NotSet")) };	
-
-	virtual void SetUpObjectName(const FString& InObjectName);
-
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	virtual void Reset();
-	
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	virtual void SetValues(int32 InObjectValue, int32 InStructValue);
-
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	virtual void TrySaveConfig();
-
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	virtual void TryLoadConfig();
-
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	void DisplayMessage(const FString& InMessage);
-};
 
 /**
  * EditorPerProjectUserSettings will be saved and loaded successfully in most cases even if there is no additional setting.
@@ -64,6 +18,8 @@ class UE505CONFIGSAMPLE_API UConfigEditorPerProjectUserSettings : public UConfig
 {
 	GENERATED_BODY()
 };
+
+
 
 /**
  * This will be saved because there is an item for this class in the "SectionsToSave" in DefaultGame.ini file.

@@ -3,6 +3,7 @@
 
 #include "UE505ConfigSample/Public/ConfigTestSubsystem.h"
 
+#include "ConfigTestLog.h"
 #include "UE505ConfigSample/Public/ConfigClasses.h"
 #include "UE505ConfigSample/Public/UE505ConfigSample.h"
 
@@ -43,14 +44,15 @@ void UConfigTestSubsystem::ConstructConfigObjects()
 	ConfigObjects.Reset();
 
 	ConfigObjects = {
-		NewObject<UConfigEditorPerProjectUserSettings>(this, FName(TEXT("UConfigEditorPerProjectUserSettings")))
-		, NewObject<UConfigGameOne>(this, FName(TEXT("UConfigGameOne")))
+		NewObject<UConfigGameOne>(this, FName(TEXT("UConfigGameOne")))
 		, NewObject<UConfigGameTwo>(this, FName(TEXT("UConfigGameTwo")))
 		, NewObject<UMyCustomFileNameAlphaOne>(this, FName(TEXT("UMyCustomFileNameAlphaOne")))
 		, NewObject<UMyCustomFileNameAlphaTwo>(this, FName(TEXT("UMyCustomFileNameAlphaTwo")))
 		, NewObject<UMyCustomFileNameBravoOne>(this, FName(TEXT("UMyCustomFileNameBravoOne")))
 		, NewObject<UMyCustomFileNameBravoTwo>(this, FName(TEXT("UMyCustomFileNameBravoTwo")))
-		
+#if WITH_EDITOR		
+		, NewObject<UConfigEditorPerProjectUserSettings>(this, FName(TEXT("UConfigEditorPerProjectUserSettings")))
+#endif
 	};
 
 	for (UConfigBase* Config : ConfigObjects)
@@ -58,7 +60,8 @@ void UConfigTestSubsystem::ConstructConfigObjects()
 		Config->SetUpObjectName(Config->GetFName().ToString());
 	}
 
-	DisplayedMessage = FString(TEXT("Initialized in cpp"));
+	UConfigTestLog::Get()->DisplayedLog = FString(TEXT("Initialized in cpp")); 
+	
 }
 
 void UConfigTestSubsystem::TryToSaveAll()
@@ -108,13 +111,15 @@ void UConfigTestSubsystem::ReloadConfigCacheInEngine()
 	
 	TArray<UConfigBase*> CDOs =
 		{
-			GetMutableDefault<UConfigEditorPerProjectUserSettings>()
-			, GetMutableDefault<UConfigGameOne>()
+			GetMutableDefault<UConfigGameOne>()
 			, GetMutableDefault<UConfigGameTwo>()
 			, GetMutableDefault<UMyCustomFileNameAlphaOne>()
 			, GetMutableDefault<UMyCustomFileNameAlphaTwo>()
 			, GetMutableDefault<UMyCustomFileNameBravoOne>()
 			, GetMutableDefault<UMyCustomFileNameBravoTwo>()
+#if WITH_EDITOR	&& !UE_BUILD_SHIPPING
+			, GetMutableDefault<UConfigEditorPerProjectUserSettings>()
+#endif
 		};
 
 	/*for (UConfigBase* InItem : CDOs)

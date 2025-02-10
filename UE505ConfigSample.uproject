@@ -17,6 +17,17 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "ConfigTestEnginePlugin",
+			"Enabled": true
+		},
+		{
+			"Name": "ConfigTestEditorPlugin",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
 		}
 	]
 }

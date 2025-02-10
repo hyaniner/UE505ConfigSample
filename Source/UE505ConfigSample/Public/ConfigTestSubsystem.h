@@ -4,10 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "ConfigBase.h"
 #include "ConfigTestSubsystem.generated.h"
-
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpdateMessage, FString, MessageString);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearObject);
 
@@ -67,17 +65,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
 	TArray<TObjectPtr<class UConfigBase>> ConfigObjects;
-
-	/*
-	 * This is the text displayed in the MultiLineEditableTextBox.
-	 * By this approach, we can handle cases where console or debugging messages are not available,
-	 * such as a packaged build.
-	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
-	FString DisplayedMessage;
-
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "USAPI|GameBoard", meta = (CallInEditor = "true"))
-	FOnUpdateMessage OnUpdateMessage;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "USAPI|GameBoard", meta = (CallInEditor = "true"))
 	FOnClearObject OnClearObject;	
