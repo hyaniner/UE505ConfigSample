@@ -87,6 +87,33 @@ public:
 };
 
 /**
+ * 
+ */
+UCLASS(BlueprintType, Blueprintable, Config = Engine)
+class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginEngine : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+UCLASS(BlueprintType, Blueprintable, Config = Game)
+class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginGame : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+UCLASS(BlueprintType, Blueprintable, Config = User)
+class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginUser : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
  * This class will fail to save the config.
  * Because it is inside the plugin: Without an additional c++ code, You can not use the custom file name of ini inside the plugin.
  * To see details, see: https://hyaniner.com//en/blog/config-ini-of-ue-5.5-20250218/

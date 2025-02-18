@@ -13,12 +13,12 @@
 
 /**
  * This will be saved because there is an item for this class in the "SectionsToSave" in DefaultGame.ini file.
- * (+Section=/Script/UE505ConfigSample.ConfigGameOne)
+ * (+Section=/Script/UE505ConfigSample.GameInGameModuleOne)
  * Note: You must remove the prefix U from the class name.
- * If you add the prefix U (for example, '(+Section=/Script/UE505ConfigSample.UConfigGameOne)'), it will not work.
+ * If you add the prefix U (for example, '(+Section=/Script/UE505ConfigSample.UGameInGameModuleOne)'), it will not work.
  */
 UCLASS(BlueprintType, Blueprintable, Config = Game)
-class UE505CONFIGSAMPLE_API UConfigGameOne : public UConfigBase
+class UE505CONFIGSAMPLE_API UGameInGameModuleOne : public UConfigBase
 {
 	GENERATED_BODY()
 };
@@ -32,7 +32,20 @@ class UE505CONFIGSAMPLE_API UConfigGameOne : public UConfigBase
  * However, if you save the config, the manually written contents will be deleted from ini.
  */
 UCLASS(BlueprintType, Blueprintable, Config = Game)
-class UE505CONFIGSAMPLE_API UConfigGameTwo : public UConfigBase
+class UE505CONFIGSAMPLE_API UGameInGameModuleTwo : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+UCLASS(BlueprintType, Blueprintable, Config = Engine)
+class UE505CONFIGSAMPLE_API UEngineInGameModule : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+
+UCLASS(BlueprintType, Blueprintable, Config = User)
+class UE505CONFIGSAMPLE_API UUserInGameModule : public UConfigBase
 {
 	GENERATED_BODY()
 };
