@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// https://github.com/hyaniner/UE505ConfigSample
 
 #pragma once
 
@@ -12,9 +12,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearObject);
 /**
  * Subsystems are some kinds of singleton classes of Unreal Engine. They are useful when you need to access something globally.
  * https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-subsystems-in-unreal-engine
- *
- * This is "GameInstanceSubsystem". So it will be constructed whenever the game starts like PIE.
- * I want to note that if this class inherits 'UEngineSubsystem', the value would persist even if PIE is stopped.
  */
 UCLASS(Blueprintable, BlueprintType)
 class UE505CONFIGSAMPLE_API UConfigTestSubsystem : public UGameInstanceSubsystem
@@ -40,7 +37,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	void TryToSaveAll();
 
-	//Try to load all config objects.
+	/*
+	 * Try to load all config objects.
+	 * This is not needed, actually.
+	 * Because when CDO is constructed, it loads config.
+	 * and When UObject is constructed, it copies the properties from CDO.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	void TryToLoadAll();
 
@@ -64,8 +66,9 @@ public:
 	static void ReloadConfigCacheInEngine();
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
-	TArray<TObjectPtr<class UConfigBase>> ConfigObjects;
+	TArray<TObjectPtr<class UConfigBase>> ConfigObjects;	
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "USAPI|GameBoard", meta = (CallInEditor = "true"))
-	FOnClearObject OnClearObject;	
+	FOnClearObject OnClearObject;
+	
 };

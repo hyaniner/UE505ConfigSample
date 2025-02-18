@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// https://github.com/hyaniner/UE505ConfigSample
 
 #pragma once
 
@@ -8,16 +8,6 @@
 #include "ConfigClasses.generated.h"
 
 
-
-
-/**
- * EditorPerProjectUserSettings will be saved and loaded successfully in most cases even if there is no additional setting.
- */
-UCLASS(BlueprintType, Blueprintable, Config = EditorPerProjectUserSettings)
-class UE505CONFIGSAMPLE_API UConfigEditorPerProjectUserSettings : public UConfigBase
-{
-	GENERATED_BODY()
-};
 
 
 
@@ -36,6 +26,10 @@ class UE505CONFIGSAMPLE_API UConfigGameOne : public UConfigBase
 /**
  * This will fail to save,
  * because an item for this class does not exist in the "SectionsToSave" in DefaultGame.ini file.
+ * ---
+ * You can manually write the settings for this class in the ini file.
+ * Then it will be applied when you run the program.
+ * However, if you save the config, the manually written contents will be deleted from ini.
  */
 UCLASS(BlueprintType, Blueprintable, Config = Game)
 class UE505CONFIGSAMPLE_API UConfigGameTwo : public UConfigBase
@@ -44,57 +38,111 @@ class UE505CONFIGSAMPLE_API UConfigGameTwo : public UConfigBase
 };
 
 /**
- * This project has a file, "DefaultMyCustomFileNameAlpha.ini".
+ * This project has a file, "DefaultCustomInGameModuleAlpha.ini".
  * And this file has "bCanSaveAllSections=true" inside the section '[SectionsToSave]'
- * So if the value of the 'Config' specifier is "MyCustomFileName",
+ * So if the value of the 'Config' specifier is "CustomInGameModuleAlpha",
  * then all classes will succeed in saving.
  */
-UCLASS(BlueprintType, Blueprintable, Config = MyCustomFileNameAlpha)
-class UE505CONFIGSAMPLE_API UMyCustomFileNameAlphaOne : public UConfigBase
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleAlpha) //CustomNameInGameAlpha
+class UE505CONFIGSAMPLE_API UCustomInGameModuleAlphaOne : public UConfigBase 
 {
 	GENERATED_BODY()
 };
 
 /**
- * This project has a file, "DefaultMyCustomFileNameAlpha.ini".
+ * This project has a file, "DefaultCustomInGameModuleAlpha.ini".
  * And this file has "bCanSaveAllSections=true" inside the section '[SectionsToSave]'
- * So if the value of the 'Config' specifier is "MyCustomFileName",
+ * So if the value of the 'Config' specifier is "CustomInGameModuleAlpha",
  * then all classes will succeed in saving.
  */
-UCLASS(BlueprintType, Blueprintable, Config = MyCustomFileNameAlpha)
-class UE505CONFIGSAMPLE_API UMyCustomFileNameAlphaTwo : public UConfigBase
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleAlpha)
+class UE505CONFIGSAMPLE_API UCustomInGameModuleAlphaTwo : public UConfigBase
 {
 	GENERATED_BODY()
 };
 
 /**
- * This project has a file, "DefaultMyCustomFileNameBravo.ini".
- * And this file has "+Section=/Script/UE505ConfigSample.MyCustomFileNameBravoOne" inside the section '[SectionsToSave]'
+ * This project has a file, "DefaultCustomInGameModuleBravo.ini".
+ * And this file has "+Section=/Script/UE505ConfigSample.CustomInGameModuleBravoOne" inside the section '[SectionsToSave]'
  * So properties with the Config specifier in this class will be saved.
  * Note: You must remove the prefix U from the class name.
- * If you add the prefix U (for example, '(+Section=/Script/UE505ConfigSample.UMyCustomFileNameBravoOne)'), it will not work.
+ * If you add the prefix U (for example, "+Section=/Script/UE505ConfigSample.UCustomInGameModuleBravoOne"), it will not work.
  */
-UCLASS(BlueprintType, Blueprintable, Config = MyCustomFileNameBravo)
-class UE505CONFIGSAMPLE_API UMyCustomFileNameBravoOne : public UConfigBase
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleBravo)
+class UE505CONFIGSAMPLE_API UCustomInGameModuleBravoOne : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UMyCustomFileNameBravoOne();
+	UCustomInGameModuleBravoOne();
 };
 
 /**
- * This project has a file, "DefaultMyCustomFileNameBravo.ini".
+ * This project has a file, "DefaultCustomInGameModuleBravo.ini".
  * And there is no item related to this class inside the section '[SectionsToSave]'.
  * So properties with the Config specifier in this class will NOT be saved.
+ * ---
+ * You can manually write the settings for this class in the ini file.
+ * Then it will be applied when you run the program.
+ * However, if you save the config, the manually written contents will be deleted from ini.
  */
-UCLASS(BlueprintType, Blueprintable, Config = MyCustomFileNameBravo)
-class UE505CONFIGSAMPLE_API UMyCustomFileNameBravoTwo : public UConfigBase
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleBravo)
+class UE505CONFIGSAMPLE_API UCustomInGameModuleBravoTwo : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UMyCustomFileNameBravoTwo();
+	UCustomInGameModuleBravoTwo();
 };
 
+
+/**
+ * There is no file with the name, "DefaultCustomInGameModuleCharlie". So it will fail to save the config.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleCharlie)
+class UE505CONFIGSAMPLE_API UCustomInGameModuleCharlieOne : public UConfigBase
+{
+	GENERATED_BODY()
+public:
+	UCustomInGameModuleCharlieOne();
+};
+
+/**
+ * There is no file with the name, "DefaultCustomInGameModuleWillBeFail". So it will fail to save the config.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = CustomInGameModuleWillBeFail)
+class UE505CONFIGSAMPLE_API UCustomInGameModuleWillBeFail : public UConfigBase
+{
+	GENERATED_BODY()
+public:
+	UCustomInGameModuleWillBeFail();
+};
+
+
+/**
+ * We can not tell that this is a good practice, but it is for testing of assuming
+ * a class within the game module uses "EditorPerProjectUserSettings".
+ * 
+ * EditorPerProjectUserSettings will be saved and loaded successfully in most cases even if there is no additional setting.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = EditorPerProjectUserSettings)
+class UE505CONFIGSAMPLE_API UConfigEditorConfigInGameModule : public UConfigBase
+{
+	GENERATED_BODY()
+	
+public:
+
+	//Without this preprocessor, packaging will fail. This is the property, so we use "WITH_EDITORONLY_DATA" here.
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ConfigSampleAPI", Config)
+	int32 SomeProperty = { -2 };
+#endif
+
+	//Without this preprocessor, packaging will fail. This is the function, so we use "WITH_EDITOR" here.	
+#if WITH_EDITOR
+	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI")
+	void SomeFunction();
+#endif
+	
+};
 
 
 

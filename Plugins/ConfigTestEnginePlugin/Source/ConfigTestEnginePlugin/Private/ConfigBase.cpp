@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// https://github.com/hyaniner/UE505ConfigSample
 
 
 #include "ConfigBase.h"
@@ -50,6 +50,26 @@ void UConfigBase::DisplayMessage(const FString& InMessage)
 	UConfigTestLog* Subsystem = UConfigTestLog::Get();
 	const FString NewString = Subsystem->DisplayedLog + FString(TEXT("\n")) + InMessage;	
 	Subsystem->OnUpdateLog.Broadcast(NewString);
+}
+
+UConfigTestEnginePluginOne::UConfigTestEnginePluginOne()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UConfigTestEnginePluginOne"));
+}
+
+UConfigTestEnginePluginTwo::UConfigTestEnginePluginTwo()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UConfigTestEnginePluginTwo"));
+}
+
+UThisConfigInPluginWillFailOne::UThisConfigInPluginWillFailOne()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailOne"));
+}
+
+UThisConfigInPluginWillFailTwo::UThisConfigInPluginWillFailTwo()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailTwo"));
 }
 
 

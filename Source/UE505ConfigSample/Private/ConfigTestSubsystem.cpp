@@ -1,11 +1,16 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// https://github.com/hyaniner/UE505ConfigSample
 
 
 #include "UE505ConfigSample/Public/ConfigTestSubsystem.h"
-
 #include "ConfigTestLog.h"
 #include "UE505ConfigSample/Public/ConfigClasses.h"
 #include "UE505ConfigSample/Public/UE505ConfigSample.h"
+
+
+#if WITH_EDITOR
+#include "ConfigEditor.h"
+#endif
+
 
 UE_DISABLE_OPTIMIZATION
 
@@ -44,14 +49,23 @@ void UConfigTestSubsystem::ConstructConfigObjects()
 	ConfigObjects.Reset();
 
 	ConfigObjects = {
-		NewObject<UConfigGameOne>(this, FName(TEXT("UConfigGameOne")))
+		NewObject<UConfigTestEnginePluginOne>(this, FName(TEXT("UConfigTestEnginePluginOne")))
+		, NewObject<UConfigTestEnginePluginTwo>(this, FName(TEXT("UConfigTestEnginePluginTwo")))
+		, NewObject<UThisConfigInPluginWillFailOne>(this, FName(TEXT("UThisConfigInPluginWillFailOne")))
+		, NewObject<UThisConfigInPluginWillFailTwo>(this, FName(TEXT("UThisConfigInPluginWillFailTwo")))
+		, NewObject<UConfigGameOne>(this, FName(TEXT("UConfigGameOne")))
 		, NewObject<UConfigGameTwo>(this, FName(TEXT("UConfigGameTwo")))
-		, NewObject<UMyCustomFileNameAlphaOne>(this, FName(TEXT("UMyCustomFileNameAlphaOne")))
-		, NewObject<UMyCustomFileNameAlphaTwo>(this, FName(TEXT("UMyCustomFileNameAlphaTwo")))
-		, NewObject<UMyCustomFileNameBravoOne>(this, FName(TEXT("UMyCustomFileNameBravoOne")))
-		, NewObject<UMyCustomFileNameBravoTwo>(this, FName(TEXT("UMyCustomFileNameBravoTwo")))
-#if WITH_EDITOR		
+		, NewObject<UCustomInGameModuleAlphaOne>(this, FName(TEXT("UCustomInGameModuleAlphaOne")))
+		, NewObject<UCustomInGameModuleAlphaTwo>(this, FName(TEXT("UCustomInGameModuleAlphaTwo")))
+		, NewObject<UCustomInGameModuleBravoOne>(this, FName(TEXT("UCustomInGameModuleBravoOne")))
+		, NewObject<UCustomInGameModuleBravoTwo>(this, FName(TEXT("UCustomInGameModuleBravoTwo")))
+		, NewObject<UCustomInGameModuleCharlieOne>(this, FName(TEXT("UCustomInGameModuleCharlieOne")))
+		, NewObject<UCustomInGameModuleWillBeFail>(this, FName(TEXT("UCustomInGameModuleWillBeFail")))
+
+//Without this preprocessor, packaging will fail.
+#if WITH_EDITOR  		
 		, NewObject<UConfigEditorPerProjectUserSettings>(this, FName(TEXT("UConfigEditorPerProjectUserSettings")))
+		, NewObject<UConfigEditorConfigInGameModule>(this, FName(TEXT("UConfigEditorConfigInGameModule")))
 #endif
 	};
 
@@ -59,7 +73,7 @@ void UConfigTestSubsystem::ConstructConfigObjects()
 	{
 		Config->SetUpObjectName(Config->GetFName().ToString());
 	}
-
+	
 	UConfigTestLog::Get()->DisplayedLog = FString(TEXT("Initialized in cpp")); 
 	
 }
@@ -68,6 +82,15 @@ void UConfigTestSubsystem::TryToSaveAll()
 {
 	for (UConfigBase* Config : ConfigObjects)
 	{
+		if (
+			Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleBravoTwo")))
+			|| Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleCharlieOne")))
+			|| Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleWillBeFail")))
+			)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("BreakPoint!"));			
+		}
+		
 		Config->TrySaveConfig();
 	}
 }
@@ -113,11 +136,11 @@ void UConfigTestSubsystem::ReloadConfigCacheInEngine()
 		{
 			GetMutableDefault<UConfigGameOne>()
 			, GetMutableDefault<UConfigGameTwo>()
-			, GetMutableDefault<UMyCustomFileNameAlphaOne>()
-			, GetMutableDefault<UMyCustomFileNameAlphaTwo>()
-			, GetMutableDefault<UMyCustomFileNameBravoOne>()
-			, GetMutableDefault<UMyCustomFileNameBravoTwo>()
-#if WITH_EDITOR	&& !UE_BUILD_SHIPPING
+			, GetMutableDefault<UCustomInGameModuleAlphaOne>()
+			, GetMutableDefault<UCustomInGameModuleAlphaTwo>()
+			, GetMutableDefault<UCustomInGameModuleBravoOne>()
+			, GetMutableDefault<UCustomInGameModuleBravoTwo>()
+#if WITH_EDITOR	
 			, GetMutableDefault<UConfigEditorPerProjectUserSettings>()
 #endif
 		};

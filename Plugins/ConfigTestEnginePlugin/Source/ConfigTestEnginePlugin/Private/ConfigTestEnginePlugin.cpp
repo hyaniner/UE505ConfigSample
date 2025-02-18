@@ -1,12 +1,14 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// https://github.com/hyaniner/UE505ConfigSample
 
 #include "ConfigTestEnginePlugin.h"
 
 #define LOCTEXT_NAMESPACE "FConfigTestEnginePluginModule"
 
+UE_DISABLE_OPTIMIZATION
+
 void FConfigTestEnginePluginModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	UE_LOG(LogTemp, Warning, TEXT("FConfigTestEnginePluginModule::StartupModule is called."));	
 }
 
 void FConfigTestEnginePluginModule::ShutdownModule()
@@ -15,8 +17,10 @@ void FConfigTestEnginePluginModule::ShutdownModule()
 	// we call this function before unloading the module.
 }
 
+UE_ENABLE_OPTIMIZATION
+
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FConfigTestEnginePluginModule, ConfigTestEnginePlugin)
 
 

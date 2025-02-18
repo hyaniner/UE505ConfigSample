@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// https://github.com/hyaniner/UE505ConfigSample
 
 using UnrealBuildTool;
 

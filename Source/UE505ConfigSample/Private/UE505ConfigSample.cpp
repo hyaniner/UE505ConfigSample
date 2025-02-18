@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// https://github.com/hyaniner/UE505ConfigSample
 
 
 #include "UE505ConfigSample/Public/UE505ConfigSample.h"
