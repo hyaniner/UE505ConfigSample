@@ -7,22 +7,6 @@
 #include "ConfigBase.generated.h"
 
 
-
-
-/**
- * This does not have the config specifier.
- * But it will have a config specifier in the object below as the property.
- * So it will be saved.
- */
-USTRUCT(BlueprintType)
-struct CONFIGTESTENGINEPLUGIN_API FConfigTest
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
-	int32 ValueInStruct = { -1 };
-};
-
 /**
  * This class has a based functionality to save/load config.
  */
@@ -34,10 +18,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
 	int32 ValueInObject { -1 };
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
-	FConfigTest MyStruct { FConfigTest() };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI", Config)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
 	FString ConfigObjectName { FString(TEXT("NotSet")) };	
 
 	virtual void SetUpObjectName(const FString& InObjectName);
@@ -46,7 +27,7 @@ public:
 	virtual void Reset();
 	
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	virtual void SetValues(int32 InObjectValue, int32 InStructValue);
+	virtual void SetValues(int32 InNewValue);
 
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	virtual void TrySaveConfig();
@@ -56,6 +37,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	void DisplayMessage(const FString& InMessage);
+
+	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
+	void PrintValueInCDO();
 };
 
 /**
@@ -65,50 +49,85 @@ public:
  * So, when you just add "Default{PluginName}.ini", basically every class will be saved if that class uses this Config file.
  * note: You can override this by adding "bCanSaveAllSections=false" into the "Default{PluginName}.ini".
  * (At now, there is the "bCanSaveAllSections=false" inside "DefaultConfigTestEnginePlugin.ini", but it is commented out.)
- * (Also, I commented out "+Section=/Script/ConfigTestEnginePlugin.ConfigTestEnginePluginOne" now.)
+ * (Also, I commented out "+Section=/Script/ConfigTestEnginePlugin.PluginNameInEnginePluginOne" now.)
  */
 UCLASS(BlueprintType, Blueprintable, Config = ConfigTestEnginePlugin)
-class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginOne : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UPluginNameInEnginePluginOne : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UConfigTestEnginePluginOne();
+	UPluginNameInEnginePluginOne();
 };
 
 /**
- * See the comment of UConfigTestEnginePluginOne above.  This is the same case of it.
+ * See the comment of UPluginNameInEnginePluginOne above.  This is the same case of it.
  */
 UCLASS(BlueprintType, Blueprintable, Config = ConfigTestEnginePlugin)
-class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginTwo : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UPluginNameInEnginePluginTwo : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UConfigTestEnginePluginTwo();
+	UPluginNameInEnginePluginTwo();
 };
 
 /**
- * 
+ * In "{ProjectFolder}/Config/DefaultEngine.ini", we have an item "
+ * +Section=/Script/ConfigTestEnginePlugin.EngineInEnginePluginOne" in the section "[SectionsToSave]".
+ * So this will succeed to save.
  */
 UCLASS(BlueprintType, Blueprintable, Config = Engine)
-class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginEngine : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UEngineInEnginePluginOne : public UConfigBase
 {
 	GENERATED_BODY()
 };
 
 /**
- * 
+ * In "{ProjectFolder}/Config/DefaultEngine.ini", we do NOT have an item
+ * "+Section=/Script/ConfigTestEnginePlugin.EngineInEnginePluginTwo" in the section "[SectionsToSave]".
+ * So this will fail to save.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = Engine)
+class CONFIGTESTENGINEPLUGIN_API UEngineInEnginePluginTwo : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
+ * In "{ProjectFolder}/Config/DefaultGame.ini", we have an item
+ * "+Section=/Script/ConfigTestEnginePlugin.GameInEnginePluginOne" in the section "[SectionsToSave]".
+ * So this will succeed to save.
  */
 UCLASS(BlueprintType, Blueprintable, Config = Game)
-class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginGame : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UGameInEnginePluginOne : public UConfigBase
 {
 	GENERATED_BODY()
 };
 
 /**
- * 
+ * In "{ProjectFolder}/Config/DefaultGame.ini", we do NOT have an item
+ * "+Section=/Script/ConfigTestEnginePlugin.GameInEnginePluginTwo" in the section "[SectionsToSave]".
+ * So this will fail to save.
  */
-UCLASS(BlueprintType, Blueprintable, Config = User)
-class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginUser : public UConfigBase
+UCLASS(BlueprintType, Blueprintable, Config = Game)
+class CONFIGTESTENGINEPLUGIN_API UGameInEnginePluginTwo : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
+ * This uses the "GameUserSettings". It will always succeed in saving.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = GameUserSettings)
+class CONFIGTESTENGINEPLUGIN_API UGameUserSettingsInEnginePluginOne : public UConfigBase
+{
+	GENERATED_BODY()
+};
+
+/**
+ * This uses the "GameUserSettings". It will always succeed in saving.
+ */
+UCLASS(BlueprintType, Blueprintable, Config = GameUserSettings)
+class CONFIGTESTENGINEPLUGIN_API UGameUserSettingsInEnginePluginTwo : public UConfigBase
 {
 	GENERATED_BODY()
 };
@@ -116,24 +135,24 @@ class CONFIGTESTENGINEPLUGIN_API UConfigTestEnginePluginUser : public UConfigBas
 /**
  * This class will fail to save the config.
  * Because it is inside the plugin: Without an additional c++ code, You can not use the custom file name of ini inside the plugin.
- * To see details, see: https://hyaniner.com//en/blog/config-ini-of-ue-5.5-20250218/
+ * To see details, see: https://hyaniner.com/en/blog/config-ini-of-ue-5.5-20250218/
  */
 UCLASS(BlueprintType, Blueprintable, Config = ThisConfigInPluginWillFail)
-class CONFIGTESTENGINEPLUGIN_API UThisConfigInPluginWillFailOne : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UThisConfigInPluginWillFailInEnginePluginOne : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UThisConfigInPluginWillFailOne();
+	UThisConfigInPluginWillFailInEnginePluginOne();
 };
 
 /**
- * See the comment of UThisConfigInPluginWillFailOne above.  This is the same case of it.
+ * See the comment of UThisConfigInPluginWillFailInEnginePluginOne above.  This is the same case of it.
  */
 UCLASS(BlueprintType, Blueprintable, Config = ThisConfigInPluginWillFail)
-class CONFIGTESTENGINEPLUGIN_API UThisConfigInPluginWillFailTwo : public UConfigBase
+class CONFIGTESTENGINEPLUGIN_API UThisConfigInPluginWillFailInEnginePluginTwo : public UConfigBase
 {
 	GENERATED_BODY()
 public:
-	UThisConfigInPluginWillFailTwo();
+	UThisConfigInPluginWillFailInEnginePluginTwo();
 };
 

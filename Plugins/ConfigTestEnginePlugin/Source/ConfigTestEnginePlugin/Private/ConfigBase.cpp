@@ -14,17 +14,15 @@ void UConfigBase::SetUpObjectName(const FString& InObjectName)
 void UConfigBase::Reset()
 {
 	ValueInObject = -1;
-	MyStruct = FConfigTest();
 	
-	const FString Message = FString::Printf(TEXT("Reset : Object: %s, ObjectValue: %d, StructValue %d "), *ConfigObjectName, ValueInObject, MyStruct.ValueInStruct);
+	const FString Message = FString::Printf(TEXT("Reset : Object: %s, ObjectValue: %d"), *ConfigObjectName, ValueInObject);
 	DisplayMessage(Message);
 }
 
-void UConfigBase::SetValues(int32 InObjectValue, int32 InStructValue)
+void UConfigBase::SetValues(int32 InNewValue)
 {
-	ValueInObject = InObjectValue;
-	MyStruct.ValueInStruct = InStructValue;
-	const FString Message = FString::Printf(TEXT("Value set: Object: %s, ObjectValue: %d, StructValue %d "), *ConfigObjectName, InObjectValue, InStructValue);
+	ValueInObject = InNewValue;
+	const FString Message = FString::Printf(TEXT("Value set: Object: %s, ObjectValue: %d"), *ConfigObjectName, InNewValue);
 	DisplayMessage(Message);
 }
 
@@ -48,28 +46,45 @@ void UConfigBase::DisplayMessage(const FString& InMessage)
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *InMessage);
 	
 	UConfigTestLog* Subsystem = UConfigTestLog::Get();
-	const FString NewString = Subsystem->DisplayedLog + FString(TEXT("\n")) + InMessage;	
-	Subsystem->OnUpdateLog.Broadcast(NewString);
+	Subsystem->DisplayedLog = Subsystem->DisplayedLog + FString(TEXT("\n")) + InMessage;	
+	Subsystem->OnUpdateLog.Broadcast(Subsystem->DisplayedLog);
 }
 
-UConfigTestEnginePluginOne::UConfigTestEnginePluginOne()
+void UConfigBase::PrintValueInCDO()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Constructor of UConfigTestEnginePluginOne"));
+	FString MessageToDisplay = FString::Printf(TEXT("MyName: %s, PrintValueInCDO failed. "), *ConfigObjectName);
+	
+	UClass* MyClass = GetClass();
+	if (IsValid(MyClass))
+	{
+		const UConfigBase* MyClassDefaultObject = MyClass->GetDefaultObject<UConfigBase>();
+		if (IsValid(MyClassDefaultObject))
+		{
+			MessageToDisplay = FString::Printf(TEXT("MyName: %s / MyClass: %s / ValueInCDO: %d "), *ConfigObjectName, *MyClass->GetName(), MyClassDefaultObject->ValueInObject );		
+		}	
+	} 
+
+	DisplayMessage(MessageToDisplay);	
 }
 
-UConfigTestEnginePluginTwo::UConfigTestEnginePluginTwo()
+UPluginNameInEnginePluginOne::UPluginNameInEnginePluginOne()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Constructor of UConfigTestEnginePluginTwo"));
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UPluginNameInEnginePluginOne"));
 }
 
-UThisConfigInPluginWillFailOne::UThisConfigInPluginWillFailOne()
+UPluginNameInEnginePluginTwo::UPluginNameInEnginePluginTwo()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailOne"));
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UPluginNameInEnginePluginTwo"));
 }
 
-UThisConfigInPluginWillFailTwo::UThisConfigInPluginWillFailTwo()
+UThisConfigInPluginWillFailInEnginePluginOne::UThisConfigInPluginWillFailInEnginePluginOne()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailTwo"));
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailInEnginePluginOne"));
+}
+
+UThisConfigInPluginWillFailInEnginePluginTwo::UThisConfigInPluginWillFailInEnginePluginTwo()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Constructor of UThisConfigInPluginWillFailInEnginePluginTwo"));
 }
 
 

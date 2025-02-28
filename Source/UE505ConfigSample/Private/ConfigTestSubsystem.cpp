@@ -49,27 +49,40 @@ void UConfigTestSubsystem::ConstructConfigObjects()
 	ConfigObjects.Reset();
 
 	ConfigObjects = {
-		NewObject<UConfigTestEnginePluginOne>(this, FName(TEXT("UConfigTestEnginePluginOne")))
-		, NewObject<UConfigTestEnginePluginTwo>(this, FName(TEXT("UConfigTestEnginePluginTwo")))
-		, NewObject<UThisConfigInPluginWillFailOne>(this, FName(TEXT("UThisConfigInPluginWillFailOne")))
-		, NewObject<UThisConfigInPluginWillFailTwo>(this, FName(TEXT("UThisConfigInPluginWillFailTwo")))
-		, NewObject<UConfigTestEnginePluginEngine>(this, FName(TEXT("UConfigTestEnginePluginEngine")))
-		, NewObject<UConfigTestEnginePluginGame>(this, FName(TEXT("UConfigTestEnginePluginGame")))
-		, NewObject<UConfigTestEnginePluginUser>(this, FName(TEXT("UConfigTestEnginePluginUser")))
+		NewObject<UPluginNameInEnginePluginOne>(this, FName(TEXT("UPluginNameInEnginePluginOne")))
+		, NewObject<UPluginNameInEnginePluginTwo>(this, FName(TEXT("UPluginNameInEnginePluginTwo")))
+		, NewObject<UThisConfigInPluginWillFailInEnginePluginOne>(this, FName(TEXT("UThisConfigInPluginWillFailInEnginePluginOne")))
+		, NewObject<UThisConfigInPluginWillFailInEnginePluginTwo>(this, FName(TEXT("UThisConfigInPluginWillFailInEnginePluginTwo")))
+		, NewObject<UEngineInEnginePluginOne>(this, FName(TEXT("UEngineInEnginePluginOne")))
+		, NewObject<UEngineInEnginePluginTwo>(this, FName(TEXT("UEngineInEnginePluginTwo")))
+		, NewObject<UGameInEnginePluginOne>(this, FName(TEXT("UGameInEnginePluginOne")))
+		, NewObject<UGameInEnginePluginTwo>(this, FName(TEXT("UGameInEnginePluginTwo")))
+		, NewObject<UGameUserSettingsInEnginePluginOne>(this, FName(TEXT("UGameUserSettingsInEnginePluginOne")))
+		, NewObject<UGameUserSettingsInEnginePluginTwo>(this, FName(TEXT("UGameUserSettingsInEnginePluginTwo")))
 		, NewObject<UGameInGameModuleOne>(this, FName(TEXT("UGameInGameModuleOne")))
 		, NewObject<UGameInGameModuleTwo>(this, FName(TEXT("UGameInGameModuleTwo")))
 		, NewObject<UEngineInGameModule>(this, FName(TEXT("UEngineInGameModule")))
-		, NewObject<UUserInGameModule>(this, FName(TEXT("UUserInGameModule")))
+		, NewObject<UGameUserSettingsInGameModule>(this, FName(TEXT("UGameUserSettingsInGameModule")))
 		, NewObject<UCustomInGameModuleAlphaOne>(this, FName(TEXT("UCustomInGameModuleAlphaOne")))
 		, NewObject<UCustomInGameModuleAlphaTwo>(this, FName(TEXT("UCustomInGameModuleAlphaTwo")))
 		, NewObject<UCustomInGameModuleBravoOne>(this, FName(TEXT("UCustomInGameModuleBravoOne")))
 		, NewObject<UCustomInGameModuleBravoTwo>(this, FName(TEXT("UCustomInGameModuleBravoTwo")))
 		, NewObject<UCustomInGameModuleCharlieOne>(this, FName(TEXT("UCustomInGameModuleCharlieOne")))
 		, NewObject<UCustomInGameModuleWillBeFail>(this, FName(TEXT("UCustomInGameModuleWillBeFail")))
+		, NewObject<UCustomButBaseNameHasUser>(this, FName(TEXT("UCustomButBaseNameHasUser")))
 
 //Without this preprocessor, packaging will fail.
 #if WITH_EDITOR  		
-		, NewObject<UConfigEditorPerProjectUserSettings>(this, FName(TEXT("UConfigEditorPerProjectUserSettings")))
+		, NewObject<UEditorInEditorPlugin>(this, FName(TEXT("UEditorInEditorPlugin")))
+		, NewObject<UEditorInGameModule>(this, FName(TEXT("UEditorInGameModule")))		
+		, NewObject<UEdtPrPrjtUsrSettingsInPlugin>(this, FName(TEXT("UEdtPrPrjtUsrSettingsInPlugin")))
+		, NewObject<UEdtPrPrjtUsrSettingsInGameModule>(this, FName(TEXT("UEdtPrPrjtUsrSettingsInGameModule")))
+		, NewObject<UEditorSettingsInEditorPlugin>(this, FName(TEXT("UEditorSettingsInEditorPlugin")))
+		, NewObject<UEditorSettingsInGameModule>(this, FName(TEXT("UEditorSettingsInGameModule")))
+		, NewObject<UEditorKeyBindingsInEditorPlugin>(this, FName(TEXT("UEditorKeyBindingsInEditorPlugin")))
+		, NewObject<UEditorKeyBindingsInGameModule>(this, FName(TEXT("UEditorKeyBindingsInGameModule")))
+		, NewObject<UEditorLayoutInEditorPlugin>(this, FName(TEXT("UEditorLayoutInEditorPlugin")))
+		, NewObject<UEditorLayoutInGameModule>(this, FName(TEXT("UEditorLayoutInGameModule")))
 		, NewObject<UConfigEditorConfigInGameModule>(this, FName(TEXT("UConfigEditorConfigInGameModule")))
 #endif
 	};
@@ -88,9 +101,8 @@ void UConfigTestSubsystem::TryToSaveAll()
 	for (UConfigBase* Config : ConfigObjects)
 	{
 		if (
-			Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleBravoTwo")))
-			|| Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleCharlieOne")))
-			|| Config->ConfigObjectName.Equals(FString(TEXT("UCustomInGameModuleWillBeFail")))
+			Config->ConfigObjectName.Equals(FString(TEXT("UEditorLayoutInEditorPlugin")))
+			|| Config->ConfigObjectName.Equals(FString(TEXT("UEditorLayoutInGameModule")))
 			)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("BreakPoint!"));			
@@ -133,48 +145,85 @@ void UConfigTestSubsystem::CheckAndConvert(const FText& InText, bool& bOutSucces
 	}
 }
 
-void UConfigTestSubsystem::ReloadConfigCacheInEngine()
+void UConfigTestSubsystem::QuickTestFunction()
 {
 
-	
-	TArray<UConfigBase*> CDOs =
+	UE_LOG(LogTemp, Warning, TEXT("QuickTestFunction Entered!"));
+
+
+	UClass* WorkingClass = nullptr;
+	for (UConfigBase* ConfigItem : ConfigObjects)
+	{
+		UCustomButBaseNameHasUser* Casted = Cast<UCustomButBaseNameHasUser>(ConfigItem);
+		if (IsValid(Casted))
 		{
-			GetMutableDefault<UGameInGameModuleOne>()
-			, GetMutableDefault<UGameInGameModuleTwo>()
-			, GetMutableDefault<UCustomInGameModuleAlphaOne>()
-			, GetMutableDefault<UCustomInGameModuleAlphaTwo>()
-			, GetMutableDefault<UCustomInGameModuleBravoOne>()
-			, GetMutableDefault<UCustomInGameModuleBravoTwo>()
-#if WITH_EDITOR	
-			, GetMutableDefault<UConfigEditorPerProjectUserSettings>()
-#endif
-		};
+			WorkingClass = Casted->GetClass();			
+			break;
+		}		
+	}
 
-	/*for (UConfigBase* InItem : CDOs)
-	{
-		InItem->Reset();
-	}*/
+	FString Message = FString(TEXT(""));
 	
-	TArray<FName> BaseNames =
+	if (IsValid(WorkingClass))
 	{
-		FName(TEXT("MyCustomFileNameAlpha"))
-		, FName(TEXT("MyCustomFileNameBravo"))
-	};
+		UCustomButBaseNameHasUser* ClassDefaultObjectOfWorkingConfig = WorkingClass->GetDefaultObject<UCustomButBaseNameHasUser>();
+		Message = Message + FString(TEXT("\n")) + FString(TEXT("CDO Found."));
+		Message = Message + FString(TEXT("\n")) + FString::Printf(TEXT("CDO Name: %s"), *ClassDefaultObjectOfWorkingConfig->ConfigObjectName);
 
-	FConfigCacheIni* ConfigCache = GConfig;
+		FString ConfigName = WorkingClass->GetConfigName();
+		FString StringFromConfig = FString(TEXT(""));
+		
+		const bool bSuccess = GConfig->GetString(
+			TEXT("/Script/UE505ConfigSample.CustomButBaseNameHasUser")
+			, TEXT("ConfigObjectName")
+			, StringFromConfig
+			, ConfigName
+			);
+		
+		if (bSuccess)
+		{
+			Message = Message + FString(TEXT("\n")) + FString(TEXT("UCustomButBaseNameHasUser Config Found."));
+			Message = Message + FString(TEXT("\n")) + FString::Printf(TEXT("Config String : %s"), *StringFromConfig);
+		}
+		else
+		{
+			Message = Message + FString(TEXT("\n")) + FString(TEXT("UCustomButBaseNameHasUser Config NOT Found."));
+		}
+	}
 
-	for (const FName ItemToWork : BaseNames)
+	
+	
+
+	if (!Message.IsEmpty())
 	{
-		FString FileName = ConfigCache->GetConfigFilename(*(ItemToWork.ToString()));
-		FConfigBranch* Branch =	ConfigCache->FindBranchWithNoReload(ItemToWork, FileName);
-		//unload를 먼저 해볼까' ㅅ'?
-		Branch->SafeUnload();		
-		Branch->SafeReload();		
+		UConfigTestLog* LogSubsystem = UConfigTestLog::Get();
+		LogSubsystem->DisplayedLog = LogSubsystem->DisplayedLog + Message;
+		LogSubsystem->OnUpdateLog.Broadcast(LogSubsystem->DisplayedLog);	
 	}
 	
-
-
-
+		
+#if WITH_EDITOR
+	
+	if (GConfig)
+	{
+		FConfigCacheIni* Config = GConfig;
+		FConfigBranch* EditorLayoutBranch = Config->FindBranch(FName("EditorLayout"), FString(TEXT("")));
+		if (EditorLayoutBranch)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found!"));		
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EditorLayout Not Found!"));		
+		}
+	}
+	
+#else
+	
+	UE_LOG(LogTemp, Warning, TEXT("We don't have an editor!"));
+	
+#endif
+	
 }
 
 UE_ENABLE_OPTIMIZATION

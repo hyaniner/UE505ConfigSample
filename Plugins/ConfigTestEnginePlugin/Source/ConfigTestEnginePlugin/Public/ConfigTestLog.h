@@ -32,7 +32,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
 	FString DisplayedLog;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "USAPI|GameBoard", meta = (CallInEditor = "true"))
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	FOnUpdateLog OnUpdateLog;
 	
 };

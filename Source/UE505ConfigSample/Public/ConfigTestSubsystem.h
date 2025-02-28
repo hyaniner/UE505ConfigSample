@@ -62,13 +62,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
 	static void CheckAndConvert(const FText& InText, bool& bOutSuccess, int32& OutAsInt32, FString& OutAsString);
 
-	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
-	static void ReloadConfigCacheInEngine();
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ConfigSampleAPI")
 	TArray<TObjectPtr<class UConfigBase>> ConfigObjects;	
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "USAPI|GameBoard", meta = (CallInEditor = "true"))
 	FOnClearObject OnClearObject;
-	
+
+	UFUNCTION(BlueprintCallable, Category = "ConfigSampleAPI", meta = (CallInEditor = "true"))
+	void QuickTestFunction();
 };
