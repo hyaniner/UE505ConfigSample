@@ -215,7 +215,7 @@ class UE505CONFIGSAMPLE_API UEditorInGameModule : public UConfigBase
  * If there are no calls in c++ code, there is no problem compiling without using the preprocessor in a state like this.
  */
 UCLASS(BlueprintType, Blueprintable, Config = EditorPerProjectUserSettings)
-class UE505CONFIGSAMPLE_API UEdtPrPrjtUsrSettingsInGameModule : public UConfigBase
+class UE505CONFIGSAMPLE_API UEditorPerProjectUserSettingsInGM : public UConfigBase
 {
 	GENERATED_BODY()
 };
